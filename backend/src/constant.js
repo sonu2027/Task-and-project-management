@@ -1,0 +1,1 @@
+export const DB_NAME='task-and-project-management'
