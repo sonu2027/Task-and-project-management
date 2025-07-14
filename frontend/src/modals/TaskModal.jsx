@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./TaskModal.css";
 
-const TaskModal = ({ project, onClose, onSuccess }) => {
+const TaskModal = ({ project, onClose, onSuccess, existingData = null }) => {
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -10,15 +10,34 @@ const TaskModal = ({ project, onClose, onSuccess }) => {
     dueDate: "",
   });
 
+  useEffect(() => {
+    if (existingData) {
+      setForm({
+        title: existingData.title || "",
+        description: existingData.description || "",
+        status: existingData.status || "todo",
+        priority: existingData.priority || "medium",
+        dueDate: existingData.dueDate ? existingData.dueDate.split("T")[0] : "",
+      });
+    }
+  }, [existingData]);
+
+
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const url = existingData
+      ? `${import.meta.env.VITE_API_URI}/api/tasks/${existingData._id}`
+      : `${import.meta.env.VITE_API_URI}/api/tasks`;
+
+    const method = existingData ? "PUT" : "POST";
+
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URI}/api/tasks`, {
-        method: "POST",
+      const response = await fetch(url, {
+        method,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -28,15 +47,16 @@ const TaskModal = ({ project, onClose, onSuccess }) => {
 
       const data = await response.json();
       onSuccess(data);
+      onClose();
     } catch (err) {
-      console.error("Task creation failed:", err);
+      console.error("Task submission failed:", err);
     }
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content task-form">
-        <h3>Create Task for <span>{project.name}</span></h3>
+        <h3>{existingData ? "Edit Task" : `Create Task for ${project.name}`}</h3>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -80,7 +100,7 @@ const TaskModal = ({ project, onClose, onSuccess }) => {
           />
 
           <div className="btn-group">
-            <button type="submit">Create Task</button>
+            <button type="submit">{existingData ? "Update Task" : "Create Task"}</button>
             <button type="button" onClick={onClose}>Cancel</button>
           </div>
         </form>

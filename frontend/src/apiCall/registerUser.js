@@ -8,18 +8,16 @@ const registerUser = async (userData) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
-        credentials: "include", // if you're using cookies or sessions
+        credentials: "include", 
       }
     );
 
     const result = await response.json();
 
-    // ⛔ User already exists
     if (result.userExist) {
       return { userExist: true };
     }
 
-    // ✅ Successful registration
     return {
       userExist: false,
       token: result.data?.token,

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Register.css"; // Optional if you prefer SCSS
+import "./Register.css"; 
 import VerifyModal from "../modals/VerifyModal.jsx";
 import sendEmailVerificationCode from "../apiCall/senEmailverificationOtp.js";
 import registerUser from "../apiCall/registerUser.js";

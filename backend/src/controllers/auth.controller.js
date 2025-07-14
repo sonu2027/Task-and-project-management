@@ -9,17 +9,13 @@ export const register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
-    // 🔍 Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      // 👇 Return flag for frontend check
       return res.status(200).json({ userExist: true });
     }
 
-    // 🔐 Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 👤 Create new user
     const user = await User.create({
       name,
       email,
@@ -27,12 +23,10 @@ export const register = async (req, res) => {
       role,
     });
 
-    // 🪙 Create token
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, {
       expiresIn: "1d",
     });
 
-    // ✅ Send structured success response
     res.status(201).json({ userExist: false, data: { token } });
   } catch (error) {
     console.error("Register error:", error);
@@ -44,7 +38,6 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // 🔍 Find user by email
     const user = await User.findOne({ email });
     if (!user) {
       return res
@@ -52,7 +45,6 @@ export const login = async (req, res) => {
         .json({ message: "Invalid email or password", error: true });
     }
 
-    // 🔐 Compare password
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
       return res
@@ -60,12 +52,10 @@ export const login = async (req, res) => {
         .json({ message: "Invalid email or password", error: true });
     }
 
-    // 🪙 Generate token
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, {
       expiresIn: "1d",
     });
 
-    // ✅ Success response
     res.status(200).json({ token });
   } catch (error) {
     console.error("Login Error:", error);
@@ -80,7 +70,6 @@ export const sendemailverificationcode = async (req, res) => {
 
   console.log("req.body: ", req.body);
 
-  // Create a transporter object using SMTP transport
   let transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
@@ -91,7 +80,6 @@ export const sendemailverificationcode = async (req, res) => {
 
   console.log("transporter: ", transporter);
 
-  // Setup email data
   let mailOptions = {
     from: "sonu.mondal.2027@gmail.com",
     to: email,
@@ -102,7 +90,6 @@ export const sendemailverificationcode = async (req, res) => {
   console.log("mailOptions: ", mailOptions);
 
   try {
-    // Send mail with defined transport object
     await transporter.sendMail(mailOptions);
     res.send("Email sent successfully");
   } catch (error) {

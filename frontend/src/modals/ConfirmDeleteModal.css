@@ -1,58 +1,3 @@
-/* .modal-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(3px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.modal-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  max-width: 500px;
-  text-align: center;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-}
-
-.modal-content.danger {
-  border: 2px solid #dc3545;
-}
-
-.btn-group {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.cancel-btn, .delete-btn {
-  padding: 0.7rem 1.2rem;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  border: none;
-  cursor: pointer;
-}
-
-.cancel-btn {
-  background-color: #eee;
-  color: #333;
-}
-
-.delete-btn {
-  background-color: #dc3545;
-  color: white;
-}
-
-.delete-btn:hover {
-  background-color: #c82333;
-} */
-
-/* Modal Overlay */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -65,7 +10,6 @@
   padding: 1rem;
 }
 
-/* Modal Content */
 .modal-content {
   background-color: #ffffff;
   border-radius: 12px;
@@ -76,12 +20,10 @@
   animation: fadeInScale 0.3s ease;
 }
 
-/* Danger Accent */
 .modal-content.danger {
   border-left: 5px solid #dc3545;
 }
 
-/* Header */
 .modal-content h3 {
   font-size: 1.5rem;
   margin-bottom: 0.75rem;
@@ -89,7 +31,6 @@
   text-align: center;
 }
 
-/* Paragraph */
 .modal-content p {
   font-size: 1rem;
   color: #444;
@@ -97,7 +38,6 @@
   text-align: center;
 }
 
-/* Button Group */
 .btn-group {
   display: flex;
   justify-content: center;
@@ -105,7 +45,6 @@
   flex-wrap: wrap;
 }
 
-/* Cancel Button */
 .cancel-btn {
   background-color: #f1f1f1;
   color: #333;
@@ -120,7 +59,6 @@
   background-color: #e2e2e2;
 }
 
-/* Delete Button */
 .delete-btn {
   background-color: #dc3545;
   color: #fff;
@@ -135,7 +73,6 @@
   background-color: #c82333;
 }
 
-/* Responsive Animation */
 @keyframes fadeInScale {
   from {
     opacity: 0;

@@ -28,17 +28,15 @@ export const createProject = async (req, res) => {
 };
 export const getProjects = async (req, res) => {
   console.log("hello");
-  
+
   try {
     let projects;
 
-    // 🛡️ If user is admin — fetch all projects
     if (req.user.role === "admin") {
       projects = await Project.find()
         .populate("assignedUsers", "name email")
         .populate("createdBy", "name");
     } else {
-      // 👤 If normal user — fetch only assigned projects
       projects = await Project.find({ assignedUsers: req.user._id })
         .populate("assignedUsers", "name email")
         .populate("createdBy", "name");
@@ -51,24 +49,20 @@ export const getProjects = async (req, res) => {
   }
 };
 
-
 export const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, description, assignedUsers } = req.body;
 
-    // 🔍 Check if project exists
     const existingProject = await Project.findById(id);
     if (!existingProject) {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    // 🛡️ Optional: Ensure only admins can edit
     if (req.user.role !== "admin") {
       return res.status(403).json({ message: "Unauthorized" });
     }
 
-    // ✏️ Update fields
     existingProject.name = name || existingProject.name;
     existingProject.description = description || existingProject.description;
     existingProject.assignedUsers = Array.isArray(assignedUsers)
@@ -87,24 +81,22 @@ export const deleteProject = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // 🔍 Check if project exists
     const project = await Project.findById(id);
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    // 🛡️ Authorization check (optional if handled in middleware)
     if (req.user.role !== "admin") {
       return res.status(403).json({ message: "Access denied" });
     }
 
-    // 🧹 Delete all tasks under this project
     await Task.deleteMany({ project: id });
 
-    // 🗑️ Delete the project itself
     await Project.findByIdAndDelete(id);
 
-    res.status(200).json({ message: "Project and related tasks deleted successfully" });
+    res
+      .status(200)
+      .json({ message: "Project and related tasks deleted successfully" });
   } catch (error) {
     console.error("DeleteProject Error:", error);
     res.status(500).json({ message: "Failed to delete project", error });
