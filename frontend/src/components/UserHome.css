@@ -1,0 +1,33 @@
+.user-home {
+  padding: 2rem;
+  max-width: 700px;
+  margin: auto;
+}
+
+.user-home h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #1e90ff;
+}
+
+.user-home .card {
+  background: #f5faff;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(30, 144, 255, 0.1);
+  margin-top: 1.5rem;
+}
+
+.user-home .card h3 {
+  margin-bottom: 1rem;
+}
+
+.user-home .card ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.user-home .card li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #dbe9ff;
+}

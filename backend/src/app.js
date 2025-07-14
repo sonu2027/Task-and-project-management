@@ -19,11 +19,15 @@ app.use(express.static("public"));
 // app.use(cookieParser(process.env.COOKIE_SECRET));
 
 import authRouter from "./routes/auth.route.js";
-// import questionRouter from "./routes/question.routes.js";
-// import contestRouter from "./routes/contest.route.js";
-
 app.use("/api/auth", authRouter);
-// app.use("/api/question", questionRouter);
-// app.use("/api/contest", contestRouter);
+
+import projectRouter from "./routes/project.route.js"
+app.use("/api", projectRouter);
+
+import userRouter from "./routes/user.route.js";
+app.use("/api", userRouter);
+
+import taskRouter from "./routes/task.route.js"
+app.use("/api", taskRouter)
 
 export default app;

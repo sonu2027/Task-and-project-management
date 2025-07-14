@@ -50,7 +50,7 @@ const Register = () => {
     } else if (result.token) {
       localStorage.setItem("token", result.token);
       toast.success("Registration successfull")
-      navigate("/login");
+      navigate("/home");
     } else {
       setError("Something went wrong");
       toast.error("something went wrong while regustring, please try again")
