@@ -49,3 +49,8 @@
 .modal-content button[type="button"] {
   background-color: #ccc;
 }
+
+#error-text{
+  color: rgb(254, 60, 60);
+  font-weight: 600;
+}

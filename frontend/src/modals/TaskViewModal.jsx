@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./TaskViewModal.css";
 import TaskModal from "./TaskModal.jsx";
+import DeleteTask from "./DeleteTask.jsx";
+import toast from "react-hot-toast"
 
 const TaskViewModal = ({ project, onClose }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editTask, setEditTask] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState(null);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_URI}/api/tasks?project=${project._id}`, {
@@ -39,9 +42,12 @@ const TaskViewModal = ({ project, onClose }) => {
         },
       });
       setTasks(tasks.filter((task) => task._id !== taskId));
+      toast.success("Task deleted successfully")
     } catch (err) {
       console.error("Delete failed:", err);
+      toast.error("Task deletion failed")
     }
+    setTaskToDelete(null)
   };
 
   return (
@@ -66,7 +72,7 @@ const TaskViewModal = ({ project, onClose }) => {
                 </div>
                 <div className="task-actions">
                   <button onClick={() => openEditModal(task)}>✏️ Edit</button>
-                  <button onClick={() => handleDelete(task._id)}>🗑️ Delete</button>
+                  <button onClick={() => setTaskToDelete(task)}>🗑️ Delete</button>
                 </div>
               </div>
             ))}
@@ -88,6 +94,13 @@ const TaskViewModal = ({ project, onClose }) => {
             );
             closeEditModal();
           }}
+        />
+      )}
+
+      {taskToDelete && (
+        <DeleteTask
+          onClose={() => setTaskToDelete(null)}
+          onConfirm={() => handleDelete(taskToDelete._id)}
         />
       )}
 

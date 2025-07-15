@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import UserHome from "../components/UserHome";
@@ -18,6 +18,12 @@ const Home = () => {
 
         try {
             const decoded = jwtDecode(token);
+            const currentTime = Date.now() / 1000;
+            if (decoded.exp < currentTime) {
+                localStorage.removeItem("token");
+                navigate("/login");
+                return;
+            }
             setRole(decoded.role);
         } catch (err) {
             console.error("Invalid token", err);

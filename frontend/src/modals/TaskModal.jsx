@@ -9,6 +9,7 @@ const TaskModal = ({ project, onClose, onSuccess, existingData = null }) => {
     priority: "medium",
     dueDate: "",
   });
+  const [error, setError] = useState("")
 
   useEffect(() => {
     if (existingData) {
@@ -29,6 +30,9 @@ const TaskModal = ({ project, onClose, onSuccess, existingData = null }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     const url = existingData
       ? `${import.meta.env.VITE_API_URI}/api/tasks/${existingData._id}`
       : `${import.meta.env.VITE_API_URI}/api/tasks`;
@@ -52,6 +56,49 @@ const TaskModal = ({ project, onClose, onSuccess, existingData = null }) => {
       console.error("Task submission failed:", err);
     }
   };
+
+
+  const validateForm = () => {
+    const validateField = (value, fieldName, maxLength) => {
+      const trimmed = value.trim();
+      const words = trimmed.split(/\s+/);
+
+      if (trimmed !== value) {
+        setError(`${fieldName} should not have leading/trailing or multiple spaces.`);
+        return false;
+      }
+
+      for (let word of words) {
+        if (word.length > 25) {
+          setError(`Each word in ${fieldName} must not exceed 25 characters.`);
+          return false;
+        }
+      }
+
+      if (trimmed.length > maxLength) {
+        setError(`${fieldName} must not exceed ${maxLength} characters.`);
+        return false;
+      }
+
+      return true;
+    };
+
+    if (
+      !validateField(form.title, "Task Title", 40) ||
+      !validateField(form.description, "Task Description", 120)
+    ) {
+      return false;
+    }
+
+    if (!form.dueDate) {
+      setError("Please select a due date.");
+      return false;
+    }
+
+    setError("");
+    return true;
+  };
+
 
   return (
     <div className="modal-overlay">
@@ -98,6 +145,8 @@ const TaskModal = ({ project, onClose, onSuccess, existingData = null }) => {
             value={form.dueDate}
             onChange={handleChange}
           />
+
+          {error && <p id="error-text">{error}</p>}
 
           <div className="btn-group">
             <button type="submit">{existingData ? "Update Task" : "Create Task"}</button>

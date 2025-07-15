@@ -40,15 +40,23 @@ const ProjectsPage = () => {
         setShowTaskModal(false);
     };
 
+    const fetchProjects = async () => {
+        try {
+            const res = await fetch(`${import.meta.env.VITE_API_URI}/api/projects`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            });
+            const data = await res.json();
+            setProjects(data);
+        } catch (err) {
+            console.error("Error fetching projects:", err);
+        }
+    };
+
+
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URI}/api/projects`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-        })
-            .then(res => res.json())
-            .then(data => setProjects(data))
-            .catch(err => console.error("Error fetching projects:", err));
+        fetchProjects()
     }, []);
 
     const handleEdit = (id, e) => {
@@ -134,14 +142,8 @@ const ProjectsPage = () => {
                         setShowModal(false);
                         setEditProject(null);
                     }}
-                    onSuccess={(newData) => {
-                        if (editProject) {
-                            setProjects((prev) =>
-                                prev.map((p) => (p._id === newData._id ? newData : p))
-                            );
-                        } else {
-                            setProjects((prev) => [...prev, newData]);
-                        }
+                    onSuccess={() => {
+                        fetchProjects();
                         setShowModal(false);
                         setEditProject(null);
                     }}

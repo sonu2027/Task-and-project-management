@@ -8,6 +8,7 @@ const ProjectModal = ({ onClose, onSuccess, existingData = null }) => {
     assignedUsers: [],
   });
   const [userOptions, setUserOptions] = useState([]);
+  const [error, setError] = useState("")
 
   useEffect(() => {
     if (existingData) {
@@ -43,6 +44,9 @@ const ProjectModal = ({ onClose, onSuccess, existingData = null }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     const url = existingData
       ? `${import.meta.env.VITE_API_URI}/api/projects/${existingData._id}`
       : `${import.meta.env.VITE_API_URI}/api/create-projects`;
@@ -66,6 +70,45 @@ const ProjectModal = ({ onClose, onSuccess, existingData = null }) => {
     }
   };
 
+
+  const validateForm = () => {
+    const validateField = (fieldValue, fieldName, maxLength) => {
+      const trimmed = fieldValue.trim();
+      const words = trimmed.split(/\s+/);
+
+      if (trimmed !== fieldValue) {
+        setError(`${fieldName} should not have leading/trailing or multiple spaces.`);
+        return false;
+      }
+
+      for (let word of words) {
+        if (word.length > 25) {
+          setError(`Each word in ${fieldName} must not exceed 25 characters.`);
+          return false;
+        }
+      }
+
+      if (trimmed.length > maxLength) {
+        setError(`${fieldName} must not exceed ${maxLength} characters.`);
+        return false;
+      }
+
+      return true;
+    };
+
+    if (
+      !validateField(form.name, "Project Name", 40) ||
+      !validateField(form.description, "Project Description", 120)
+    ) {
+      return false;
+    }
+
+    setError("");
+    return true;
+  };
+
+
+
   return (
     <div className="modal-overlay">
       <div className="modal-content">
@@ -85,6 +128,7 @@ const ProjectModal = ({ onClose, onSuccess, existingData = null }) => {
             value={form.description}
             onChange={handleChange}
           />
+          {error && <p id="error-text">{error}</p>}
 
           <div className="users-list">
             {userOptions.map((user) => (
