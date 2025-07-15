@@ -33,7 +33,7 @@ export const getProjects = async (req, res) => {
     let projects;
 
     if (req.user.role === "admin") {
-      projects = await Project.find()
+      projects = await Project.find({ createdBy: req.user._id })
         .populate("assignedUsers", "name email")
         .populate("createdBy", "name");
     } else {
@@ -100,5 +100,22 @@ export const deleteProject = async (req, res) => {
   } catch (error) {
     console.error("DeleteProject Error:", error);
     res.status(500).json({ message: "Failed to delete project", error });
+  }
+};
+
+export const getUserProjects = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const projects = await Project.find({ assignedUsers: userId }).sort({
+      createdAt: -1,
+    });
+
+    res.status(200).json(projects);
+  } catch (error) {
+    console.error("UserProjects Error:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to fetch assigned projects", error });
   }
 };

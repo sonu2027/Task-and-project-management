@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ProjectsPage.css";
 import ProjectModal from "../modals/ProjectModal.jsx";
 import ConfirmDeleteModal from "../modals/ConfirmDeleteModal";
 import TaskModal from "../modals/TaskModal.jsx";
 import TaskViewModal from "../modals/TaskViewModal.jsx";
+import { jwtDecode } from "jwt-decode";
 
 const ProjectsPage = () => {
     const [projects, setProjects] = useState([]);
@@ -57,20 +58,25 @@ const ProjectsPage = () => {
         setShowModal(true);
     };
 
+    useEffect(() => {
+        const token = localStorage.getItem("token");
 
-    const handleDelete = async (id) => {
-        try {
-            await fetch(`${import.meta.env.VITE_API_URI}/api/projects/${id}`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            });
-            setProjects(projects.filter((p) => p._id !== id));
-        } catch (err) {
-            console.error("Delete failed:", err);
+        if (!token) {
+            navigate("/login");
+            return;
         }
-    };
+        else {
+            try {
+                const decoded = jwtDecode(token);
+                if (decoded.role === "user") {
+                    navigate(-1);
+                }
+            } catch (err) {
+                console.error("Token decode failed:", err);
+                localStorage.removeItem("token");
+            }
+        }
+    }, [])
 
     const handleCreateProject = () => {
         setShowModal(true);

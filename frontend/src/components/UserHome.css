@@ -1,33 +1,27 @@
-.user-home {
+.user-home-wrapper {
   padding: 2rem;
-  max-width: 700px;
-  margin: auto;
 }
 
-.user-home h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: #1e90ff;
+.project-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
 }
 
-.user-home .card {
-  background: #f5faff;
-  padding: 1.5rem;
+.project-card {
+  background: #f9f9f9;
+  padding: 1.2rem;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(30, 144, 255, 0.1);
-  margin-top: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
 
-.user-home .card h3 {
-  margin-bottom: 1rem;
-}
-
-.user-home .card ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-.user-home .card li {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #dbe9ff;
+.logout-button{
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgb(222, 107, 107);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
 }

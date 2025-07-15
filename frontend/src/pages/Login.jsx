@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import loginUser from "../apiCall/loginUser.js"; 
+import loginUser from "../apiCall/loginUser.js";
 import toast from "react-hot-toast"
 
 const Login = () => {
@@ -9,7 +9,7 @@ const Login = () => {
     email: "",
     password: "",
   });
- 
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -31,6 +31,21 @@ const Login = () => {
       navigate("/home");
     }
   };
+
+  useEffect(() => {
+    console.log("useEffect executed");
+
+    const token = localStorage.getItem("token");
+    console.log(token);
+
+
+    if (token) {
+      navigate("/home");
+      return;
+    }
+  }, [])
+
+
 
   return (
     <div className="login-wrapper">

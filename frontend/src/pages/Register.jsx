@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Register.css"; 
+import "./Register.css";
 import VerifyModal from "../modals/VerifyModal.jsx";
 import sendEmailVerificationCode from "../apiCall/senEmailverificationOtp.js";
 import registerUser from "../apiCall/registerUser.js";
@@ -16,9 +16,23 @@ const Register = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [otpCode, setOtpCode] = useState(null);
+  const [showLoader, setShowLoader] = useState(false)
 
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("useEffect executed");
+
+    const token = localStorage.getItem("token");
+    console.log(token);
+
+
+    if (token) {
+      navigate("/home");
+      return;
+    }
+  }, [])
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -28,13 +42,16 @@ const Register = () => {
   };
 
   const handleSubmit = async (e) => {
+    setShowLoader(true)
     e.preventDefault();
     try {
       const res = await sendEmailVerificationCode(formData.email);
       setOtpCode(res);
       setShowModal(true);
       toast.success("OTP successfully sent to your email")
+      setShowLoader(false)
     } catch {
+      setShowLoader(false)
       setError("Failed to send verification code");
       toast.error("Something wnet wrong while sending otp, please try again")
     }
@@ -104,7 +121,15 @@ const Register = () => {
         </div>
 
         {error && <p className="error-text">{error}</p>}
-        <button className="submit-btn" type="submit">Sign Up</button>
+        {
+          showLoader ?
+            <div className="loader-container">
+              <button className="loader" disabled></button>
+            </div>
+
+            :
+            <button className="submit-btn" type="submit">Sign Up</button>
+        }
       </form>
       {showModal && (
         <VerifyModal

@@ -2,12 +2,13 @@
   position: fixed;
   inset: 0;
   backdrop-filter: blur(2px);
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 999;
   padding: 1rem;
+  overflow-y: auto;
 }
 
 .modal-content.task-form {
@@ -16,7 +17,8 @@
   max-width: 500px;
   width: 100%;
   padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  box-sizing: border-box;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .modal-content h3 {
@@ -26,37 +28,53 @@
   color: #333;
 }
 
-.modal-content h3 span {
-  color: #007bff;
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   width: 100%;
   padding: 0.75rem;
-  margin-bottom: 1rem;
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 1rem;
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
 }
 
 .select-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
+}
+
+.select-group label {
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
 }
 
 .btn-group {
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
   gap: 1rem;
+  justify-content: center;
 }
 
 .btn-group button {
   padding: 0.6rem 1.2rem;
-  border-radius: 8px;
   font-size: 0.95rem;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
+  min-width: 120px;
+  flex: 1;
 }
 
 .btn-group button[type="submit"] {
@@ -66,4 +84,57 @@ input, textarea, select {
 
 .btn-group button[type="button"] {
   background-color: #ccc;
+}
+
+@media screen and (max-width: 600px) {
+  .modal-content.task-form {
+    padding: 1.5rem;
+  }
+
+  .modal-content h3 {
+    font-size: 1.2rem;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 0.9rem;
+    padding: 0.65rem;
+  }
+
+  .btn-group button {
+    font-size: 0.9rem;
+    min-width: 100px;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  .modal-content.task-form {
+    padding: 1rem;
+    border-radius: 10px;
+  }
+
+  .modal-content h3 {
+    font-size: 1.1rem;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+
+  .btn-group {
+    flex-direction: column;
+  }
+
+  .btn-group button {
+    font-size: 0.85rem;
+    width: 100%;
+  }
+
+  .select-group label {
+    font-size: 0.85rem;
+  }
 }
